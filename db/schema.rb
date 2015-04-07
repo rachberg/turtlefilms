@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150214170518) do
+ActiveRecord::Schema.define(version: 20150407081701) do
+
+  create_table "jobs", id: false, force: :cascade do |t|
+    t.integer "person_id", null: false
+    t.integer "movie_id",  null: false
+    t.string  "job_name"
+  end
+
+  add_index "jobs", ["person_id", "movie_id"], name: "index_jobs_on_person_id_and_movie_id", unique: true
 
   create_table "movies", force: :cascade do |t|
     t.string   "title"
