@@ -55,3 +55,28 @@ filenames.each do |filename|
 		end
 	end
 end
+puts "inserting movies"
+#now insert movies
+
+moviefilenames = Dir["data/film_pages/*"]
+movies = []
+ moviefilenames.each do |filename|
+    #filename = "film_pages/"
+
+    f= open(filename)
+    doc= Nokogiri::HTML(f)
+    f.close
+    # puts filename
+
+    title = doc.xpath("//*[contains(@class, 'base entry')]/h1") [0].content
+    summary = doc.xpath("//*[contains(@class, 'capsule')]").text.strip#.gsub("\r","\n")
+    duration_str = doc.xpath("//*[contains(@class, 'details')]/li[starts-with(.,'Run Time')]").text
+    # puts title
+    if not duration_str.empty?
+        duration = Integer(duration_str[/[0-9]+/])
+        Movie.create(:title => title, :summary => summary, :duration => duration)
+    else
+        Movie.create(:title => title, :summary => summary)
+    end
+    puts title + "\n\n"
+end
